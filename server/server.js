@@ -14,6 +14,10 @@ app.use(API_VERSION, router);
 
 require('../routers/add-user')(router);
 
+app.get('/', (req, res) => { 
+    res.status(200).json({server:'running'});
+});
+
 const server = app.listen(PORT, () => console.log('Server running'));
 
 require('../socket/socket').listenSocket(server);
