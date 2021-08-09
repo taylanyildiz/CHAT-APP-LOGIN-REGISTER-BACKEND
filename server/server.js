@@ -22,17 +22,19 @@ app.use(API_VERSION, router);
 // add user
 require('../routers/add-user')(router);
 
-app.get('/', (req, res) => {
-    res.status(200).json({ server: 'running' });
-});
+require('../routers/connect-socket')(app);
 
 const server = app.listen(PORT, () => console.log('Server running'));
 
 
 // socket
 
+const user = [];
+
 const io = socketio(server);
 
-io.on('connection', (socket) => {
 
+io.on('connection', (socket) => {
+    // const user = JSON.parse(socket.request.headers['user']);
+    console.log('user connected');
 });
