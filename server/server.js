@@ -1,0 +1,19 @@
+const express = require('express');
+const bodyParser = require('body-parser');
+
+
+
+const API_VERSION = '/api/v1';
+const PORT = process.env.PORT || 3050;
+
+
+const app = express();
+const router = express.Router();
+app.use(bodyParser.json());
+app.use(API_VERSION, router);
+
+require('../routers/add-user')(router);
+
+const server = app.listen(PORT, () => console.log('Server running'));
+
+require('../socket/socket').listenSocket(server);
