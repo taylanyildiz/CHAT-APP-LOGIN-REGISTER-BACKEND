@@ -14,10 +14,15 @@ app.use(API_VERSION, router);
 
 require('../routers/add-user')(router);
 
-app.get('/', (req, res) => { 
-    res.status(200).json({server:'running'});
+app.get('/', (req, res) => {
+    res.status(200).json({ server: 'running' });
 });
 
 const server = app.listen(PORT, () => console.log('Server running'));
 
-require('../socket/socket').listenSocket(server);
+const io = socketio(server);
+
+
+io.on('connection', (socket) => { 
+    console.log('user connection');
+});
