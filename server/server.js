@@ -23,19 +23,22 @@ app.get('/', (req, res) => {
 // add user
 require('../routers/add-user')(router);
 
+// get user
+require('../routers/get-user')(router);
+
+// listen server
 const server = app.listen(PORT, () => console.log('Server running : ' + PORT));
 
 // socket
-
 const io = socketio(server);
 
-// io.set(process.env.ACCESS_TOKEN_SECRET);
-
+// socket jwt verify
 io.use(verify.jwtSocketIo);
 
 
-io.on('connection', (socket) => { 
+io.on('connection', (socket) => {
     console.log('user connected');
+
 });
 
 

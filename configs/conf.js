@@ -2,7 +2,7 @@ const conf = {
     db: {
         user: 'taylanyildz',
         password: 'Taylan62..',
-        host: 'localhost',
+        host: '213.238.180.11',
         port: '3307',
         dbname: 'chat_app',
     },
