@@ -21,18 +21,20 @@ const addUser = (req, res) => {
             else {
                 const payload = { name };
                 const token = jwt.sign(payload, req.app.get('api_secret_key'));
-                const sql = 'SELECT * FROM users WHERE user_phone = ?';
-                db.query(sql, [phone], (err, result) => {
+                const sql = 'SELECT * FROM users WHERE user_name = ?'
+                db.query(sql, [name], (err, result) => {
                     if (err) {
                         res.status(400).json({ msg: err });
+                        return;
                     } else {
                         bcrypt.compare(password, result[0].user_password, (err, match) => {
                             if (err) res.status(400).json({ match: match });
                             res.status(200).json({ user: result[0], token: token });
+                            return;
                         });
+                        return;
                     }
                 });
-                return;
             }
         });
     });
