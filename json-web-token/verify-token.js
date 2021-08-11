@@ -52,13 +52,12 @@ const verifyRefreshToken = (req, res, next) => {
 
 const verifySocketToken = (socket, next) => {
     const token = socket.handshake.headers['x-access-token'];
-    console.log(token);
     if (!token) {
-        return new Error('No token provided');
+        return console.log('No token provided');
     } else {
-        jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
-            if (err) next();
-            else return new Error('Authentication Error');
+        jwt.verify(token,'api_secret_key', (err, decoded) => {
+            if (!err) next();
+            else return console.log('Authentication Error');
         });
     }
 }
