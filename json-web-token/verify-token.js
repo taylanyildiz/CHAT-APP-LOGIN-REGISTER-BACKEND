@@ -28,13 +28,12 @@ const verifyRefreshToken = (req, res, next) => {
     const token = req.headers['x-access-token'];
     if (token) {
         const { name } = req.body;
-        console.log(name);
         jwt.verify(token, 'api_secret_key', (err, decoded) => {
             if (err) {
                 if (err.name == "TokenExpiredError") {
                     const payload = { name };
                     const refreshtToken = jwt.sign(payload, 'api_secret_key', {
-                        expiresIn: '15s'
+                        expiresIn: '1d' // 1 day 
                     });
                     return  res.status(200).json({ refreshtToken: refreshtToken });
 

@@ -12,8 +12,18 @@ const router = express.Router();
 app.use(express.json());
 
 
+
+// token key 
 app.set('api_secret_key', conf.api_secret_key);
+
+// router 
 app.use(API_VERSION, router);
+
+router.use((req, res, next) => {
+    // middleware 
+    next();
+})
+
 
 app.get('/', (req, res) => {
     res.status(200).json({ connection: 'succesfully' });
@@ -26,7 +36,7 @@ require('../routers/create-account')(router);
 require('../routers/login')(router);
 
 // get unread messages
-require('../routers/get-unread-message')(router);
+require('../routers/refresh-token')(router);
 
 // listen server
 const server = app.listen(PORT, () => console.log('Server running : ' + PORT));

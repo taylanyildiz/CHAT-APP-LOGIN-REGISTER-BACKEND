@@ -19,7 +19,7 @@ const createAccount = (req, res) => {
             else {
                 const payload = { name };
                 const token = jwt.sign(payload, 'api_secret_key', {
-                    expiresIn: '15s' // 15 seconds for test
+                    expiresIn: '1d' // 1 day 
                 });
                 const sql = 'SELECT * FROM users WHERE user_name = ?'
                 db.query(sql, [name], (err, result) => {
