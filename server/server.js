@@ -1,7 +1,6 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const socketio = require('socket.io');
-const verifyToken = require('../configs/conf');
+const conf = require('../configs/conf');
 const verify = require('../json-web-token/verify-token');
 
 const API_VERSION = '/api/v1';
@@ -10,21 +9,24 @@ const PORT = process.env.PORT || 3050;
 
 const app = express();
 const router = express.Router();
-app.use(bodyParser.json());
+app.use(express.json());
 
 
-app.set('api_secret_key', verifyToken.api_secret_key);
+app.set('api_secret_key', conf.api_secret_key);
 app.use(API_VERSION, router);
 
 app.get('/', (req, res) => {
     res.status(200).json({ connection: 'succesfully' });
 });
 
-// add user
-require('../routers/add-user')(router);
+// create an account
+require('../routers/create-account')(router);
 
-// get user
-require('../routers/get-user')(router);
+// user login
+require('../routers/login')(router);
+
+// get unread messages
+require('../routers/get-unread-message')(router);
 
 // listen server
 const server = app.listen(PORT, () => console.log('Server running : ' + PORT));
@@ -33,12 +35,11 @@ const server = app.listen(PORT, () => console.log('Server running : ' + PORT));
 const io = socketio(server);
 
 // socket jwt verify
-io.use(verify.jwtSocketIo);
+io.use(verify.verifySocketToken);
 
 
 io.on('connection', (socket) => {
     console.log('user connected');
-
 });
 
 
