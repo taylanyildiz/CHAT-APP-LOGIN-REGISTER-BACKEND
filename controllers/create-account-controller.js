@@ -3,7 +3,8 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 
-var salt = 'secret_key' | 4;
+var salt = bcrypt.genSaltSync(5, 'secret_key');
+
 const createAccount = (req, res) => {
     console.log(req.body);
     const { name, phone, password } = req.body;
@@ -13,7 +14,7 @@ const createAccount = (req, res) => {
         if (err) return res.status(400).json({ message: err });
         db.query(sql, [name, phone, hash], (err, result) => {
             if (err) {
-                return res.status(400).json({ message: 'Create Error' });
+                return res.status(400).json({ message: err });
             }
             else {
                 const payload = { name };
@@ -33,27 +34,6 @@ const createAccount = (req, res) => {
     });
 }
 
-const login = (req, res) => {
-    const { name, password } = req.body;
-    const hashPassword = bcrypt.hashSync(password, salt);
-    console.log(hashPassword);
-    const sql = 'CALL GetCurrentUser(?,?)';
-    db.query(sql, [name, hashPassword], (err, result) => {
-        if (err) {
-            return res.status(400).json({ message: 'Query Error' });
-        } else if (result[0].length <= 0) {
-            return res.status(401).json({ message: 'Not found user' });
-        } else {
-            const payload = { name };
-            const token = jwt.sign(payload, 'api_secret_key', {
-                expiresIn: '1d' // 1 day
-            });
-            return res.status(200).json({ user: result[0], token: token });
-        }
-    });
-}
 
-module.exports = {
-    createAccount,
-    login,
-};
+
+module.exports = { createAccount };

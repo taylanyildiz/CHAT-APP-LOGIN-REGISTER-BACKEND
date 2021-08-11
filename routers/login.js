@@ -1,4 +1,4 @@
-const controller = require('../controllers/account-controller');
+const controller = require('../controllers/login-controller');
 
 module.exports = (app) => {
     const field = '/user';
