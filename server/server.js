@@ -50,6 +50,17 @@ io.use(verify.verifySocketToken);
 
 io.on('connection', (socket) => {
     console.log('user connected');
+    
+    // socket disconnect
+    socket.on('disconnect', () => {
+        console.log('user disconnect');
+     });
+
+    // listen user connect
+    socket.on('userConnect',user=>{
+        const currentUser = JSON.parse(user);
+        console.log(user);
+    });
 });
 
 

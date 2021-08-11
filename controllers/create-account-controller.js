@@ -10,11 +10,10 @@ const createAccount = (req, res) => {
     const { name, phone, password } = req.body;
     const sql = 'INSERT INTO users (user_name,user_phone,user_password) VALUES (?,?,?);';
     bcrypt.hash(password, salt, function (err, hash) {
-        console.log(hash);
         if (err) return res.status(400).json({ message: err });
         db.query(sql, [name, phone, hash], (err, result) => {
             if (err) {
-                return res.status(400).json({ message: err });
+                return res.status(400).json({ message: 'error user create' });
             }
             else {
                 const payload = { name };

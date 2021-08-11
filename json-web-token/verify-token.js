@@ -45,6 +45,7 @@ const verifyRefreshToken = (req, res, next) => {
             }
         });
     } else {
+        // token is available 
         return res.status(401).json({ message: 'No token provided' });
     }
 }
