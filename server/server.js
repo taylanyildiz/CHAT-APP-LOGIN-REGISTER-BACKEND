@@ -64,7 +64,7 @@ io.on('connection', (socket) => {
 
         socket.join(socket.userID);
 
-        let index = clients.findIndex(client => clients.user_phone == user_phone);
+        let index = clients.findIndex(client => client.user_phone == user_phone);
         if (index == -1) {
             clients.push(user);
         } else {
@@ -72,6 +72,12 @@ io.on('connection', (socket) => {
         }
         socket.emit('get user', clients); // all user get
         socket.broadcast.emit('user connected', user); // new user get
+    });
+
+
+    socket.on('typing', data => {
+        // to => who is typing
+        socket.to(data['receiver_phone']).to(socket.userID).emit('typing',data);
     });
 
 
@@ -90,8 +96,8 @@ io.on('connection', (socket) => {
     // user disconnect offline
     socket.on('disconnect', () => {
         let index = clients.findIndex(element => element.user_phone === socket.userId);
-        // console.log(clients[index].user_name + ' user is offline');
-        // clients[index].isOnline = false;
+        console.log(clients[index].user_name + ' user is offline');
+        clients[index].isOnline = false;
         socket.broadcast.emit('user offline', clients[index]);
     });
 });

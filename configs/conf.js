@@ -1,7 +1,7 @@
 const conf = {
     db: {
-        user: '<YOUR SERVER ADMIN NAME>',
-        password: '<YOUR SERVER ADMIN PASSWORD>',
+        user: '<YOUR USER NAME>',
+        password: '<YOUR PASSWORD>',
         host: '<YOUR HOST ADRESS>',
         port: '<YOUR PORT>',
         dbname: '<YOUR DATABASE NAME>',
