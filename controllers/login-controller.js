@@ -3,7 +3,6 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
 const login = (req, res) => {
-    console.log('socket');
     const { name, password } = req.body;
     if (name && password) {
         const sql = 'SELECT * FROM users WHERE user_name = ?'

@@ -3,14 +3,13 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 
-var salt = bcrypt.genSaltSync(5, 'secret_key');
+const salt = bcrypt.getRounds('secret_key');
 
 const createAccount = (req, res) => {
-    console.log(req.body);
     const { name, phone, password } = req.body;
     const sql = 'INSERT INTO users (user_name,user_phone,user_password) VALUES (?,?,?);';
     bcrypt.hash(password, salt, function (err, hash) {
-        if (err) return res.status(400).json({ message: err });
+        if (err) return res.status(400).json({ message: 'Hash error' });
         db.query(sql, [name, phone, hash], (err, result) => {
             if (err) {
                 return res.status(400).json({ message: 'error user create' });
@@ -25,7 +24,9 @@ const createAccount = (req, res) => {
                     if (err) {
                         return res.status(400).json({ message: 'Query Error' });
                     } else {
-                        return res.status(200).json({ user: result[0], token: token });
+                        if (result[0].length <= 0)
+                            return res.status(400).json({ message: 'Error' });
+                        else return res.status(200).json({ user: result[0], token: token });
                     }
                 });
             }

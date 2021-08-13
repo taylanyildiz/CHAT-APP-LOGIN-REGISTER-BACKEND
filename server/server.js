@@ -35,8 +35,11 @@ require('../routers/create-account')(router);
 // user login
 require('../routers/login')(router);
 
-// get unread messages
+// get unread messages for test 
 require('../routers/refresh-token')(router);
+
+// check user account 
+require('../routers/check-connection')(router);
 
 // listen server
 const server = app.listen(PORT, () => console.log('Server running : ' + PORT));
@@ -47,19 +50,49 @@ const io = socketio(server);
 // socket jwt verify
 io.use(verify.verifySocketToken);
 
+let clients = [];
 
 io.on('connection', (socket) => {
-    console.log('user connected');
-    
-    // socket disconnect
-    socket.on('disconnect', () => {
-        console.log('user disconnect');
-     });
-
     // listen user connect
-    socket.on('userConnect',user=>{
-        const currentUser = JSON.parse(user);
-        console.log(user);
+    socket.on('user connected', user => {
+        let { user_phone, user_name, isOnline } = user;
+        isOnline = true;
+        console.log(user_name + ' Connected');
+
+        socket.userID = user_phone;
+        socket.username = user_name;
+
+        socket.join(socket.userID);
+
+        let index = clients.findIndex(client => clients.user_phone == user_phone);
+        if (index == -1) {
+            clients.push(user);
+        } else {
+            clients[index] = user;
+        }
+        socket.emit('get user', clients); // all user get
+        socket.broadcast.emit('user connected', user); // new user get
+    });
+
+
+
+
+    socket.on('private message', data => {
+        // from ----message--> to
+        const { sender, receiver } = data;
+        console.log(sender.user_name + ' send message to ' + receiver.user_name);
+        socket.to(receiver.user_phone).to(socket.userID).emit('private message', data);
+    });
+
+
+
+
+    // user disconnect offline
+    socket.on('disconnect', () => {
+        let index = clients.findIndex(element => element.user_phone === socket.userId);
+        // console.log(clients[index].user_name + ' user is offline');
+        // clients[index].isOnline = false;
+        socket.broadcast.emit('user offline', clients[index]);
     });
 });
 
