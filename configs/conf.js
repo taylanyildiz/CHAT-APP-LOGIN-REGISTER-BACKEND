@@ -1,10 +1,10 @@
 const conf = {
     db: {
-        user: 'taylanyildz',
-        password: 'Taylan62..',
-        host: '213.238.180.11',
-        port: '3307',
-        dbname: 'chat_app',
+        user: '<YOUR SERVER ADMIN NAME>',
+        password: '<YOUR SERVER ADMIN PASSWORD>',
+        host: '<YOUR HOST ADRESS>',
+        port: '<YOUR PORT>',
+        dbname: '<YOUR DATABASE NAME>',
     },
     api_secret_key: 'secret key',
 }
